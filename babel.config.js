@@ -3,16 +3,19 @@ module.exports = function (api) {
   return {
     presets: ["babel-preset-expo"],
     plugins: [
-      ["module-resolver", {
-        alias: {
-          "@screens": "./src/screens",
-          "@components": "./src/components",
-          "@utils": "./src/utils",
-          "@config": "./src/config",
-          "@contexts": "./src/contexts",
-          "@assets": "./assets",
-        }
-      }]
-    ]
+      [
+        "module-resolver",
+        {
+          alias: {
+            "@screens": "./src/screens",
+            "@components": "./src/components",
+            "@utils": "./src/utils",
+            "@config": "./src/config",
+            "@contexts": "./src/contexts",
+            "@assets": "./assets",
+          },
+        },
+      ],
+    ],
   };
 };
