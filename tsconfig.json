@@ -14,9 +14,9 @@
       "@screens": ["src/screens"],
       "@components": ["src/components"],
       "@utils": ["src/utils"],
-      "@contexts/*": ["src/contexts"],
-      "@config/*": ["src/config"],
-      "@assets/*": ["src/assets"],
+      "@contexts/*": ["src/contexts/*"],
+      "@config/*": ["src/config/*"],
+      "@assets/*": ["src/assets/*"],
     }
   }
 }
