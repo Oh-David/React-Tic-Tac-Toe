@@ -20,7 +20,10 @@ export default function Home({navigation}: HomeProps) {
         <View style={styles.buttons}>
           <Button 
             style={styles.button}
-            onPress={() => {}} 
+            onPress={() => {
+              navigation.navigate
+              ("SinglePlayerGame");
+            }} 
             title="Single Player" 
           />
           <Button 
