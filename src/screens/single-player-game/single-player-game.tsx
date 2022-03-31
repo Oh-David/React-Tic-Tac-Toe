@@ -2,7 +2,7 @@ import { SafeAreaView } from 'react-native'
 import React, { ReactElement, useState } from 'react'
 import styles from "./single-player-game.styles";
 import { GradientBackground, Board } from '@components';
-import { printFormattedBoard, BoardState, isEmpty, isFull, getAvailableMoves, isTerminal } from '@utils'
+import { printFormattedBoard, BoardState, isEmpty, isFull, getAvailableMoves, isTerminal, getBestMove } from '@utils'
 
 export default function Game(): ReactElement {
   const [state, setState] = useState<BoardState>(
