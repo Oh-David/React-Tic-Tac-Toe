@@ -7,10 +7,11 @@ type Cell =  "x" | "o" | null;
 type BoardProps = {
   state: BoardState;
   size: number;
+  disabled?: boolean;
   onCellPressed?: (index: number) => void;
 };
 
-export default function Board({state, size, onCellPressed}: BoardProps): ReactElement {
+export default function Board({state, disabled, size, onCellPressed}: BoardProps): ReactElement {
   return (
     <View style={
       {
@@ -23,6 +24,7 @@ export default function Board({state, size, onCellPressed}: BoardProps): ReactEl
         {state.map((cell, index) => {
           return (
             <TouchableOpacity 
+              disabled={cell !== null || disabled}
               onPress={() => onCellPressed && onCellPressed(index)}
               style={{
                 width: '33.33333%',
@@ -37,7 +39,8 @@ export default function Board({state, size, onCellPressed}: BoardProps): ReactEl
                 style={{
                   fontSize: size / 8 
                 }}
-                >{cell}</Text>
+                >{cell}
+              </Text>
             </TouchableOpacity>
           )
         })}
