@@ -7,9 +7,9 @@ import { printFormattedBoard, BoardState, isEmpty, isFull, getAvailableMoves, is
 export default function Game(): ReactElement {
   const [state, setState] = useState<BoardState>(
     [
-      null, null, null,
-      null, null, null,
-      null, null, null
+      "x", "o", null,
+      "x", "x", "o",
+      null, "o", null
     ]
     );
   const handleOnCellPressed = (cell: number): void => {
