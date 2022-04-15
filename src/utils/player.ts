@@ -1,5 +1,5 @@
 import { BoardState } from "./types";
-import { isTerminal, getAvailableMoves } from "./board"
+import { isTerminal, getAvailableMoves } from "./board";
 
 export const getBestMove = (
     state: BoardState,
@@ -23,7 +23,7 @@ export const getBestMove = (
 
     if (maximizing) {
       let best = -100;
-      getAvailableMoves(state).forEach(index => {
+      getAvailableMoves(state).forEach(index => { 
         const child: BoardState = [...state];
         child[index] = "x";
         const childValue = getBestMoveRecursive(child, false, depth + 1, maxDepth);
@@ -47,8 +47,12 @@ export const getBestMove = (
         child[index] = "o";
         const childValue = getBestMoveRecursive(child, true, depth + 1, maxDepth);
         best = Math.min(best, childValue);
+        if (depth === 0) {
+          childValues[childValue] = childValues[childValue]
+              ? `${childValues[childValue]},${index}`
+              : `${index}`;
+            }
       });
-      console.log("best", best);
       if (depth === 0) 
       {
         const arr = childValues[best].split(",");
