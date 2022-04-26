@@ -21,9 +21,7 @@ export default function Game(): ReactElement {
 
   const [turn, setTurn] = useState<"HUMAN" | "BOT">(Math.random() < 0.5 ? "HUMAN" : "BOT");
   const [isHumanMaximizing, setIsHumanMaximizing] = useState<boolean>(true);
-
   const playSound = useSounds();
-
   const gameResult = isTerminal(state);
   const insertCell = (cell: number, symbol: "x" | "o"): void => {
     const stateCopy: BoardState = [...state];
@@ -100,6 +98,7 @@ export default function Game(): ReactElement {
               handleOnCellPressed(cell)
             }}
             state={state}
+            gameResult={gameResult}
             size={300}
             ></Board>
       </SafeAreaView>
