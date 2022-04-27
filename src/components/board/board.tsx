@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import Text from "../text/text";
 import { BoardState, BoardResult } from '@utils';
 import BoardLine from "./board-line";
+import styles from "./board.styles";
 
 type Cell =  "x" | "o" | null;
 type BoardProps = {
@@ -21,39 +22,29 @@ export default function Board(
     onCellPressed
   }: BoardProps): ReactElement {
   return (
-    <View style={
+    <View style={[styles.board,
       {
         width: size,
-        height: size,
-        backgroundColor: 'green',
-        flexDirection: "row",
-        flexWrap: "wrap"
-      }}>
+        height: size
+      }]}>
         {state.map((cell, index) => {
           return (
             <TouchableOpacity 
               disabled={cell !== null || disabled}
               onPress={() => onCellPressed && onCellPressed(index)}
-              style={{
-                width: '33.33333%',
-                height: '33.33333%',
-                backgroundColor: "#fff",
-                borderWidth: 1,
-                alignItems: "center",
-                justifyContent: "center"
-              }}
+              style={[styles.cell, styles[`cell${index}` as "cell"]]}
               key={index}>
               <Text 
-                style={{
-                  fontSize: size / 8 
-                }}
+                style={[styles.cellText,{
+                  fontSize: size / 7
+                }]}
                 >{cell}
               </Text>
             </TouchableOpacity>
           )
         })}
-        {gameResult && 
-          <BoardLine size={size} gameResult={gameResult} />
+        {
+          gameResult && <BoardLine size={size} gameResult={gameResult} />
         }
     </View>
   )
