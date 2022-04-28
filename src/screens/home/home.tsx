@@ -38,7 +38,9 @@ export default function Home({navigation}: HomeProps) {
           />
           <Button 
             style={styles.button}
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate("Settings");
+            }}
             title="Settings"
           />
         </View>
