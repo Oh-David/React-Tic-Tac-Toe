@@ -1,7 +1,7 @@
-import { SafeAreaView, Dimensions } from 'react-native'
+import { View, SafeAreaView, Dimensions } from 'react-native'
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from "./single-player-game.styles";
-import { GradientBackground, Board } from '@components';
+import { GradientBackground, Board, Text, Button } from '@components';
 import { 
   BoardState, 
   isEmpty, 
@@ -23,6 +23,13 @@ export default function Game(): ReactElement {
 
   const [turn, setTurn] = useState<"HUMAN" | "BOT">(Math.random() < 0.5 ? "HUMAN" : "BOT");
   const [isHumanMaximizing, setIsHumanMaximizing] = useState<boolean>(true);
+
+  const [gamesCount, setGamesCount] = useState({
+    wins: 0,
+    losses: 0,
+    draws: 0
+  });
+
   const playSound = useSounds();
   const gameResult = isTerminal(state);
   const insertCell = (cell: number, symbol: "x" | "o"): void => {
@@ -53,21 +60,26 @@ export default function Game(): ReactElement {
     return "DRAW";
   }
 
+  const newGame = () => {
+    setState([null, null, null, null, null, null, null, null, null]);
+    setTurn(Math.random() < 0.5 ? "HUMAN" : "BOT");
+  }
+
   useEffect(() => {
     if(gameResult) {
       const winner = getWinner(gameResult.winner);
       switch (winner) {
         case "HUMAN":
           playSound("win");
-          alert ("You won");
+          setGamesCount({...gamesCount, wins: gamesCount.wins + 1});
           return;
         case "BOT":
           playSound("loss");
-          alert ("You lost");
+          setGamesCount({...gamesCount, losses: gamesCount.losses + 1});
           return;
         case "DRAW":
           playSound("draw");
-          alert ("You tied");
+          setGamesCount({...gamesCount, draws: gamesCount.draws + 1});
           return;
         default:
           return;
@@ -83,7 +95,7 @@ export default function Game(): ReactElement {
           setIsHumanMaximizing(false);
           setTurn("HUMAN");
         } else {
-          const best = getBestMove(state, !isHumanMaximizing, 0, -1);
+          const best = getBestMove(state, !isHumanMaximizing, 0, 1);
           insertCell(best, isHumanMaximizing ?  "o" : "x");
           setTurn("HUMAN");
         }
@@ -94,15 +106,46 @@ export default function Game(): ReactElement {
   return (
     <GradientBackground>
       <SafeAreaView style={styles.container}>
-          <Board 
-            disabled={Boolean(isTerminal(state)) || turn !== "HUMAN"}
-            onCellPressed={(cell) => {
-              handleOnCellPressed(cell)
-            }}
-            state={state}
-            gameResult={gameResult}
-            size={SCREEN_WIDTH - 60}
-            ></Board>
+        <View>
+          <Text style={styles.difficulty}>Difficulty: Hard</Text>
+          <View style={styles.results}>
+            <View style={styles.resultsBox}>
+              <Text style={styles.resultsTitle}>Win</Text>
+              <Text style={styles.resultsCount}>{gamesCount.wins}</Text>
+            </View>
+            <View style={styles.resultsBox}>
+              <Text style={styles.resultsTitle}>Draws</Text>
+              <Text style={styles.resultsCount}>{gamesCount.draws}</Text>
+            </View>
+            <View style={styles.resultsBox}>
+              <Text style={styles.resultsTitle}>Losses</Text>
+              <Text style={styles.resultsCount}>{gamesCount.losses}</Text>
+            </View>
+          </View>
+        </View>
+        <Board 
+          disabled={Boolean(isTerminal(state)) || turn !== "HUMAN"}
+          onCellPressed={(cell) => {
+            handleOnCellPressed(cell)
+          }}
+          state={state}
+          gameResult={gameResult}
+          size={SCREEN_WIDTH - 60}
+        />
+        {gameResult && (
+        <View style={styles.modal}>
+          <Text style={styles.modalText}>
+            {getWinner(gameResult.winner) === "HUMAN" && "You Won"}
+            {getWinner(gameResult.winner) === "BOT" && "You Lost"}
+            {getWinner(gameResult.winner) === "DRAW" && "It's a Draw"}
+          </Text>
+          <Button 
+            onPress={() => {
+              newGame();
+            }} 
+            title='Play Again' />
+        </View>
+        )}
       </SafeAreaView>
     </GradientBackground>
   )
