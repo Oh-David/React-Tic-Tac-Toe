@@ -33,7 +33,9 @@ export default function Home({navigation}: HomeProps) {
           />
           <Button 
             style={styles.button}
-            onPress={() => {}} 
+            onPress={() => {
+              navigation.navigate("Login");
+            }} 
             title="Login" 
           />
           <Button 

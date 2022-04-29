@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "baseUrl": ".",
+    "checkJs": true,
     "allowJs": true,
     "paths": {
       "@screens": [

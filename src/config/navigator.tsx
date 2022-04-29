@@ -1,15 +1,14 @@
-import { View, Text } from 'react-native'
 import React, {ReactElement} from 'react'
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator, StackNavigationOptions } from "@react-navigation/stack"
-import { Home, SinglePlayerGame, Settings } from "@screens"
+import { Home, SinglePlayerGame, Settings, Login } from "@screens"
 import { colors } from '@utils';
-import { DeliusUnicase_400Regular, DeliusUnicase_700Bold } from '@expo-google-fonts/delius-unicase'
 
 export type StackNavigatorParams = {
   Home: undefined;
   SinglePlayerGame: undefined;
   Settings: undefined;
+  Login: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>();
@@ -51,6 +50,10 @@ export default function Navigator(): ReactElement {
         <Stack.Screen 
           name="Settings" 
           component={Settings} 
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
         />
       </Stack.Navigator>
     </NavigationContainer>
