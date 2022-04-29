@@ -1,58 +1,12 @@
-import { ScrollView, View, TouchableOpacity, Switch, Alert } from 'react-native'
-import React, { ReactElement, useState, useEffect } from 'react'
+import { ScrollView, View, TouchableOpacity, Switch } from 'react-native'
+import React, { ReactElement } from 'react'
 import { GradientBackground, Text } from '@components'
 import styles from './settings.style';
 import { colors } from '@utils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { color, diff } from 'react-native-reanimated';
-
-const difficulties = {
-  "1": "Beginner",
-  "3": "Intermediate",
-  "4": "Hard",
-  "-1": "Impossible"
-};
-
-type SettingsType = {
-  difficulty: keyof typeof difficulties;
-  haptics: boolean;
-  sounds: boolean;
-}
-
-const defaultSettings: SettingsType = {
-  difficulty: "3",
-  haptics: true,
-  sounds: true
-};
+import { difficulties, useSettings } from "@contexts/settings-context";
 
 export default function Settings(): ReactElement | null {
-  const [settings, setSettings] = useState<SettingsType | null>(null);
-
-  const saveSetting = async <T extends keyof SettingsType>(setting: T, value: SettingsType[T]) => {
-    try {
-      const oldSettings = settings ? settings : defaultSettings;
-      const newSettings = {...oldSettings, [setting]: value};
-      const jsonSettings = JSON.stringify(newSettings);
-      await AsyncStorage.setItem("@settings", jsonSettings);
-      setSettings(newSettings);
-    } catch (error) {
-      Alert.alert("Error!", "An error has occured!");
-    }
-  }
-
-  const loadSettings = async () => {
-    try {
-      const settings = await AsyncStorage.getItem("@settings");
-      settings !== null ? setSettings(JSON.parse(settings)) : setSettings(defaultSettings);
-    } catch (error) {
-      setSettings(defaultSettings);
-    }
-  };
-
-  useEffect(() => {
-    loadSettings();
-  }, [])
-  
+  const {settings, saveSettings} = useSettings();
 
   if (!settings) return null;
 
@@ -66,7 +20,7 @@ export default function Settings(): ReactElement | null {
               return (
                 <TouchableOpacity 
                   onPress={() => {
-                    saveSetting("difficulty", level as keyof typeof difficulties);
+                    saveSettings("difficulty", level as keyof typeof difficulties);
                   }}
                   style={[styles.choice, {
                   backgroundColor: settings.difficulty === level ? colors.lightPurple : colors.lightGreen
@@ -95,7 +49,7 @@ export default function Settings(): ReactElement | null {
             value={settings.sounds} 
             onValueChange={() =>
             {
-              saveSetting("sounds", !settings.sounds)
+              saveSettings("sounds", !settings.sounds)
             }} 
           />
         </View>
@@ -113,7 +67,7 @@ export default function Settings(): ReactElement | null {
             value={settings.haptics} 
             onValueChange={() =>
             {
-              saveSetting("haptics", !settings.haptics)
+              saveSettings("haptics", !settings.haptics)
             }} 
           />
         </View>

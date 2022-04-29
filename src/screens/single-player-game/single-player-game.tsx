@@ -10,6 +10,8 @@ import {
   Cell,
   useSounds
 } from '@utils';
+import { useSettings, difficulties } from '@contexts/settings-context';
+import { diff } from 'react-native-reanimated';
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 
@@ -31,6 +33,9 @@ export default function Game(): ReactElement {
   });
 
   const playSound = useSounds();
+
+  const { settings } = useSettings();
+
   const gameResult = isTerminal(state);
   const insertCell = (cell: number, symbol: "x" | "o"): void => {
     const stateCopy: BoardState = [...state];
@@ -95,7 +100,11 @@ export default function Game(): ReactElement {
           setIsHumanMaximizing(false);
           setTurn("HUMAN");
         } else {
-          const best = getBestMove(state, !isHumanMaximizing, 0, 1);
+          const best = getBestMove(
+            state, 
+            !isHumanMaximizing, 
+            0, 
+            parseInt(settings ? settings?.difficulty : "-1"));
           insertCell(best, isHumanMaximizing ?  "o" : "x");
           setTurn("HUMAN");
         }
@@ -107,7 +116,7 @@ export default function Game(): ReactElement {
     <GradientBackground>
       <SafeAreaView style={styles.container}>
         <View>
-          <Text style={styles.difficulty}>Difficulty: Hard</Text>
+          <Text style={styles.difficulty}>Difficulty: {settings ? difficulties[settings.difficulty] : "Impossible"}</Text>
           <View style={styles.results}>
             <View style={styles.resultsBox}>
               <Text style={styles.resultsTitle}>Win</Text>
