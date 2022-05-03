@@ -1,6 +1,10 @@
-import { ScrollView, TextInput as NativeTextInput, Alert } from 'react-native';
+import { 
+  ScrollView, 
+  TextInput as NativeTextInput, 
+  Alert, 
+  TouchableOpacity } from 'react-native';
 import React, { ReactElement, useRef, useState } from 'react';
-import { GradientBackground, TextInput, Button } from '@components';
+import { GradientBackground, TextInput, Button, Text } from '@components';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackNavigatorParams } from "@config/navigator";
 import { Auth } from "aws-amplify";
@@ -14,7 +18,7 @@ export default function login({navigation}: LoginProps): ReactElement {
   const passwordref = useRef<NativeTextInput | null>(null);
   const [form, setForm] = useState({
     username: "test",
-    password: "1234567"
+    password: "12345678"
   });
 
   const [loading, setLoading] = useState(false);
@@ -30,8 +34,12 @@ export default function login({navigation}: LoginProps): ReactElement {
       await Auth.signIn(username, password);
       navigation.navigate("Home");
     } catch(error) {
-      console.log(error);
-      Alert.alert("Error!", "Error");
+      if (error === "UserNotConfirmedException")
+      {
+         navigation.navigate("SignUp", {username});
+      } else {
+        Alert.alert("Error!", "Login Error");
+      }
     }
     setLoading(false);
   }
@@ -62,8 +70,27 @@ export default function login({navigation}: LoginProps): ReactElement {
           secureTextEntry 
           placeholder='Password'
         />
+        <TouchableOpacity
+          onPress={() =>
+          {
+            navigation.navigate("ForgotPassword");
+          }}>
+          <Text style={styles.forgotPasswordLink}>
+            Forgot Password?
+          </Text>
+        </TouchableOpacity>
 
         <Button loading={loading} title="Login" onPress={login} />
+
+        <TouchableOpacity
+          onPress={() =>
+          {
+            navigation.navigate("SignUp");
+          }}>
+          <Text style={styles.registerLink}>
+            Don't have an account?
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </GradientBackground>
   )
